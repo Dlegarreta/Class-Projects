@@ -1,1 +1,29 @@
-Hello
+# This command scales back or cuts out columns in a data set
+xwine <- scale(wine[,1:11])
+# I tested the code with 1 sd instead of 2 to see how it would change the code.
+apply(xwine,2,sd)
+# I tested with a 1 instead of 2, mean of each column, the result was an expanded matrix
+apply(xwine,1,mean) 
+# kmeans clustering, i changed the value from 2 to 1 and 10 to 5 for a different matrix
+#clustering from 2 to 1 changed the matrices
+two <- kmeans(xwine,1,nstart=5)
+# this stored the kmean as two variable- coordinates of center of two clusters
+two$centers
+#tapply code makes a table-  tabulates value for wine color
+tapply(wine$color,two$cluster,table)
+#this is the start of a scatter plot
+#pch style of circles with borders
+#cex is the size of the points
+#bty removes the box around plot
+#bg sets the background color of each point: cluster from k-means
+#col=c set the border color of each point from the wine
+#i play with the size, shape and colors of the scatter plot
+pch=21, cex=.75, bty="n",
+xlab="fixed acidity",
+ylab="volatile acidity",
+bg=c("maroon","gold")[two$cluster[i]],
+col=c("maroon","gold")[wine$color[i]])
+#numeric value 1:200 is the sequence of integers so i chose 150 instead of 200
+#kmeans defines an anonymous function with argument k; performs k-means
+#overall this corresponds to result of k-means clustering from values 1-150
+kfit <- lapply(1:150, function(k) kmeans(xwine,k))
