@@ -1,0 +1,36 @@
+# retrieved data/read from oj
+View(oj)
+# used vector name basefit to make a linear regression using log sales and log price
+basefit <- lm(log(sales) ~ log(price), data=oj)
+#see the coeficient of the ols
+coef(basefit)
+#create new ols with brand now in the equation under vector brandfit
+brandfit <- lm(log(sales) ~ brand + log(price), data=oj)
+#coefficient of the equation
+coef(brandfit)
+# fits linear regression model, log sales and brand
+pricereg <- lm(log(sales) ~ brand, data=oj)
+# uses price reg to make predictions, predictions stored as phat
+phat <- predict(pricereg, newdata=oj)
+# calculates residuals using log of prices and subtracting phat
+presid <- log(oj$price) - phat
+#models ow well the residuals explain the variation in the log sales
+residfit <- lm(log(sales) ~ presid, data=oj)
+#coeficient
+coef(basefit)
+# changed the formula and used price instead of brand
+brandreg <- lm(log(sales) ~ price, data=oj)
+# also changed predictor
+phat2 <- predict(brandreg, newdata=oj)
+# used the new phat value in log price
+presid2 <- log(oj$price) - phat2
+#changed the residual with the new residual and phat
+residfit2 <- lm(log(sales) ~ presid2, data=oj)
+# calculates cell rate
+cellrate <- 5*cell[,2]/(1000*cell[,3])
+# extraction of phone value, t is constant
+phone <- cellrate[ t+ 1 ]
+#log regression model
+tech <- summary(glm(y ~ phone + t + s +., data=controls))$coef['phone']
+#exponential transformation, from log regression models
+exp(phonecoef) - 1
