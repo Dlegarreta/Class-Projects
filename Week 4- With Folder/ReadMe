@@ -1,0 +1,24 @@
+#retrieved data from library MASS
+library(MASS)
+data(fgl)
+dim(fgl
+#see first 5 rows in data frame
+head(fgl, n = 5)
+# code assigns scaled version of the first 9 columns
+x <- scale(fgl[,1:9])
+# applies standard deviation function to each column
+apply(x,2,sd)
+#retrieve data from class
+library(class)
+#creates random sample of 10 numbers from ranges 1-219
+test <- sample(1:219,10)
+#uses k-nearest neighbors algo to classify obs in test set. considers 3 nearest neighbors
+nearest3 <- knn(train=x[-test,], test=x[test,], cl=fgl$type[-test], k=3)
+#similar to line 16 but instead uses nearest 7 neighbors
+nearest7 <-knn(train=x[-test,], test=x[test,], cl=fgl$type[-test], k=7)
+#creates data frame using response variable fgl$type for nearest neighbors
+data.frame(fgl$type[test], nearest3,nearest7)
+#use credit data frame
+head(credit)
+dim(credit)
+#use data from outside source
