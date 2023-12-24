@@ -1,1 +1,37 @@
-Code
+#retrieve data set
+library(Matrix)
+#skips data from the first row, can also skip data from random rows by changing skip= to any other number
+data <- read.table("../Data/abortion.dat", skip=1, sep="\t")
+names(data) <- c("state", "year", "pop", "y_viol", "y_prop", "y_murd", "a_murd", "a_viol", "a_prop", 'prison', 'police', 'ur', 'inc', 'pov', 'afdc', 'gun', 'beer')
+# creates a new variables using logs, t for data and s for state, can also change it to change the focus of results
+#for example data$police
+data$pop <- log(data$pop)
+t <- data$year - 85
+s <- factor(data$state)
+#creates control variables from columns 3 and 10 to 17 in original code
+#controls can be changed 
+controls <- data.frame(data[, c(3, 10:17)])
+# following controls store y and a murders under the vector name y and d
+y <- data$y_murd
+d <- data$a_murd
+# use new data 
+cell <- read.csv("../Data/us_cellphone.csv")
+#scales the cell phone rates for easier use
+cellrate <- 5 * cell[, 2] / (1000 * cell[, 3])
+phone <- cellrate[t + 1]
+#squared terms into controls
+t <- factor(t)
+sna <- factor(s, levels = c(NA, levels(s)), exclude = NULL)
+x <- sparse.model.matrix(~ t + phone * sna + .^2, data = controls)[, -1]
+#checks if the person id in column s12 is identical to person id in descr and prgm. Matches values for all rows
+all(s12$person_id == descr$person_id)
+all(s12$person_id == prgm$person_id)
+# creates new datafram
+P <- descr[, c("person_id", "household_id", "numhh_list")]
+#first code assigns binary values for wehther ohp is equal to enrolled
+#did not really know how else to play with this code
+P$medicaid <- as.numeric(prgm[,"ohp_all_ever_firstn_30sep2009"]=="Enrolled")
+#assigns binary values doing the same but where tratment is equal to selected
+P$selected <- as.numeric(descr[,"treatment"]=="Selected")
+# changes the factor of variables to levels 1 2 3 respectively
+levels(P$numhh_list) <- c("1", "2", "3+")
