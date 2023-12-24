@@ -1,0 +1,47 @@
+#uploaded oj data
+View(oj)
+#see the first # of observations
+head(oj, n=8)
+# generalized linear model where sales is the dependent variable
+glm(log(sales) ~ brand + log(price), data=oj)
+#creates model matrix named x which uses the below formula. head and tail display the first and last few rows
+x <- model.matrix(~ brand + log(price), data=oj); head(x); tail(x)
+#created the same matrix but with sales instead of price
+y <- model.matrix(~ brand + log(sales), data=oj); head(x); tail(x)
+# this code adds a new variable called my brand to the dataset, relevels the brand with tropicana as a reference level
+oj$mybrand = relevel(oj$brand, "tropicana")
+#uses the same formula as line 6 but this time with the new variable
+x <- model.matrix(~ mybrand + log(price), data=oj); head(x)
+# glm code that links a relationship between log sales and log price, also includes brand and feat variables. dummies also created by R
+glm(log(sales) ~ log(price)brandfeat, data=oj)
+# new data set spam
+View(spam)
+# view column names of dataframe
+colnames(email)
+#logistic regression formula with dependent variable spam, stored in 'spammy'
+spammy <- glm(spam ~ ., family = "binomial", data=email)
+# returns coefficient corresponding to variable word_free in logit model
+coef(spammy)["word_free"]
+# also played with other variables such as the one below for coefficients
+coef(spammy)["word_our"]
+# calculates exponentiation of the variable word_free; also changed the variables
+exp(coef(spammy)["word_free"])
+exp(coef(spammy)["word_our"])
+#returns coeff corresponding to variable using 'george' same as lines 28 and 29
+coef(spammy)["word_george"]
+#calculate repiprocal of exponentiated coeff
+1/exp(coef(spammy)["word_george"])
+1/exp(coef(spammy)["word_george"])
+#predicts probability of spam for obs in rows 1 and 4000 of dataframe; also change the numbrers
+predict(spammy, newdata = email[c(1,4000),], type="response")
+predict(spammy, newdata = email[c(1,2000),], type="response")
+#assigns deviance values from summary of logit model
+summary(spammy)$deviance
+#returns null deviance value from summary of logit model
+summary(spammy)$null.deviance
+#assigns line 39 to 'D'
+D <- summary(spammy)$deviance; D
+#assigns line 41 to D0
+D0 <- summary(spammy)$null.deviance; D0
+# calculate fraction of deviance explained by logit model; store as R2
+R2 <- 1 - D/D0; R2
